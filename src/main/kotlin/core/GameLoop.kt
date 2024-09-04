@@ -37,11 +37,10 @@ class GameLoop(
             frameTime += passedTime
             startTime = endTime
 
-            while (unprocessedTime > TICK_DURATION) {
-                gameUpdater.update(TICK_DURATION)
+            while (unprocessedTime > DELTA_TIME) {
+                gameUpdater.update()
 
-
-                unprocessedTime -= TICK_DURATION
+                unprocessedTime -= DELTA_TIME
                 rendering = true
                 if (frameTime > ONE_SECOND) {
                     frameTime = 0.0
@@ -77,7 +76,7 @@ class GameLoop(
     }
 
     companion object {
-        const val TICK_DURATION = 1.0 / 60.0
+        const val DELTA_TIME = 1.0 / 60.0
         const val ONE_MILLIS = 1L
         const val ONE_BILLION = 1_000_000_000.0
         const val ONE_SECOND = 1

@@ -4,8 +4,8 @@ class GameUpdater {
 
     private val updatableObjects = mutableListOf<Updatable>()
 
-    fun update(deltaTime: Double) {
-        updatableObjects.forEach { it.update(deltaTime) }
+    fun update() {
+        updatableObjects.forEach { it.update() }
     }
 
     fun add(updatable: Updatable) {

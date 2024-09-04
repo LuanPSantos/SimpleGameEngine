@@ -14,19 +14,21 @@ import java.awt.image.DataBufferInt
 import javax.swing.JFrame
 
 class Window(
-    val screen: Screen,
+    width: Int,
+    height: Int,
+    scale: Double,
     title: String = "Simple Game Engine"
 ) : JFrame(title) {
 
-    private val bufferedImage = BufferedImage(screen.width, screen.height, TYPE_INT_RGB)
+    private val bufferedImage = BufferedImage(width, height, TYPE_INT_RGB)
     private val bufferStrategy: BufferStrategy
     private val graphics: Graphics
     private val canvas: Canvas
+    private val screen = Screen(width, height, (bufferedImage.raster.dataBuffer as DataBufferInt).data, scale)
 
     init {
-        screen.pixels = (bufferedImage.raster.dataBuffer as DataBufferInt).data
-
         val dimension = Dimension((screen.width * screen.scale).toInt(), (screen.height * screen.scale).toInt())
+
         canvas = Canvas()
         canvas.preferredSize = dimension
         canvas.maximumSize = dimension
@@ -46,8 +48,7 @@ class Window(
     }
 
     fun update(drawPixelsOn: (Screen) -> Unit) {
-
-        clear()
+        screen.clear()
         drawPixelsOn(screen)
 
         graphics.drawImage(bufferedImage, START_X, START_Y, canvas.width, canvas.height, null)
@@ -66,12 +67,6 @@ class Window(
         canvas.addMouseMotionListener(mouseMotionListener)
     }
 
-    private fun clear() {
-        for (index in screen.pixels.indices) {
-            screen.pixels[index] = 0xFF0000FF.toInt()
-        }
-    }
-
     companion object {
         const val NUMBER_OF_BUFFERS = 2
         const val START_X = 0
@@ -81,9 +76,21 @@ class Window(
     data class Screen(
         val width: Int,
         val height: Int,
-        var pixels: IntArray = intArrayOf(),
+        private var pixels: IntArray = intArrayOf(),
         val scale: Double = 1.0
     ) {
+        fun clear() {
+            for (y in 0..<height) {
+                for (x in 0..<width) {
+                    pixels[x + y * width] = 0xFF000000.toInt()
+                }
+            }
+        }
+
+        fun setPixelAt(x: Int, y: Int, pixelValue: Int) {
+            pixels[x + y * width] = pixelValue
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
