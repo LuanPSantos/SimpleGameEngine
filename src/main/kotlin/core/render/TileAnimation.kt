@@ -1,15 +1,14 @@
-package game
+package core.render
 
 import core.GameLoop
 import core.Window
 import core.math.Position
-import core.render.Renderable
 
 class TileAnimation(
     private val frames: Array<Sprite>,
     duration: Double = 1.0,
     var position: Position = Position()
-) : Renderable {
+) : Renderable, Cloneable {
 
     private var timeCounter = 0.0
     private val frameDuration = duration / frames.size
@@ -24,6 +23,10 @@ class TileAnimation(
             timeCounter = 0.0
             currentFrame = (currentFrame + 1) % frames.size
         }
+    }
+
+    public override fun clone(): TileAnimation {
+        return TileAnimation(frames, frameDuration * frames.size, position.copy())
     }
 
     companion object {

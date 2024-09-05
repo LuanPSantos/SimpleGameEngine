@@ -1,8 +1,7 @@
-package game
+package core.render
 
 import core.Window
 import core.math.Position
-import core.render.Renderable
 import javax.imageio.ImageIO
 
 class Sprite(
@@ -10,7 +9,7 @@ class Sprite(
     val height: Int,
     var position: Position = Position(),
     val pixels: Array<IntArray> = Array(height) { IntArray(width) },
-) : Renderable {
+) : Renderable, Cloneable {
 
     override fun render(screen: Window.Screen) {
         if (position.x < -width) return
@@ -48,6 +47,10 @@ class Sprite(
                 Renderable.setPixelOnScreen(pixels[y][x], pixelPosition, screen)
             }
         }
+    }
+
+    public override fun clone(): Sprite {
+        return Sprite(width, height, position.copy(), pixels)
     }
 
     companion object {

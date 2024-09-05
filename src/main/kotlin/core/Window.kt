@@ -1,6 +1,7 @@
 package core
 
-import core.input.GameMouseMotionListener
+import core.input.GameKeyListener
+import core.input.GameMouseListener
 import java.awt.BorderLayout
 import java.awt.Canvas
 import java.awt.Dimension
@@ -24,7 +25,7 @@ class Window(
     private val bufferStrategy: BufferStrategy
     private val graphics: Graphics
     private val canvas: Canvas
-    private val screen = Screen(width, height, (bufferedImage.raster.dataBuffer as DataBufferInt).data, scale)
+    val screen = Screen(width, height, (bufferedImage.raster.dataBuffer as DataBufferInt).data, scale)
 
     init {
         val dimension = Dimension((screen.width * screen.scale).toInt(), (screen.height * screen.scale).toInt())
@@ -55,16 +56,13 @@ class Window(
         bufferStrategy.show()
     }
 
-    fun addCanvasKeyListener(keyListener: KeyListener) {
+    fun addCanvasKeyListener(keyListener: GameKeyListener) {
         canvas.addKeyListener(keyListener)
     }
 
-    fun addCanvasMouseListener(mouseListener: MouseListener) {
+    fun addCanvasMouseListener(mouseListener: GameMouseListener) {
         canvas.addMouseListener(mouseListener)
-    }
-
-    fun addCanvasMouseMotionListener(mouseMotionListener: GameMouseMotionListener) {
-        canvas.addMouseMotionListener(mouseMotionListener)
+        canvas.addMouseMotionListener(mouseListener)
     }
 
     companion object {

@@ -1,37 +1,21 @@
 import core.*
-import core.Window.Screen
 import core.input.*
-import core.math.Position
-import core.render.GameRenderer
-import core.update.GameUpdater
-import game.Sprite
-import game.TileAnimation
-import java.awt.event.MouseEvent
+import core.render.Renderer
+import game.Player
 
 
 fun main() {
-    val window = Window(960, 720, 2.0)
+    val window = Window(480, 360, 2.0)
     val keyInputHandler = GameKeyEventHandler()
-    val mouseInputHandler = GameMouseEventHandler()
-    val mouseMotionInputHandler = GameMouseMotionEventHandler(2.0)
+    val mouseInputHandler = GameMouseInput(2.0)
 
     window.addCanvasKeyListener(GameKeyListener(keyInputHandler))
     window.addCanvasMouseListener(GameMouseListener(mouseInputHandler))
-    window.addCanvasMouseMotionListener(GameMouseMotionListener(mouseMotionInputHandler))
 
-    val yellow = Sprite.loadImage("/sprites/tileMap.png")
-    val animation = TileAnimation.fromImage(Sprite.loadImage("/sprites/tileMap.png"), 32, 32, 1.0)
+    val scene = GameScene(Renderer(window))
+        .addGameObject(Player(mouseInputHandler))
 
-    mouseMotionInputHandler.onMouseMove {
-        //yellow.position = Position(it.x - 32, it.y - 32)
-
-        animation.position = Position(it.x - 32, it.y - 32)
-    }
-
-    val gameRenderer = GameRenderer(window)
-        .add(animation)
-    val gameUpdater = GameUpdater()
-    val gameLoop = GameLoop(gameRenderer, gameUpdater, keyInputHandler, mouseInputHandler)
+    val gameLoop = GameLoop(scene, keyInputHandler, mouseInputHandler)
 
     Thread(gameLoop, window.title).start()
 }

@@ -1,8 +1,9 @@
 package core.render
 
+import core.GameObject
 import core.Window
 
-class GameRenderer(
+class Renderer(
     private val window: Window
 ) {
 
@@ -16,8 +17,9 @@ class GameRenderer(
         }
     }
 
-    fun add(renderable: Renderable): GameRenderer {
-        renderableList.add(renderable)
+    fun add(gameObject: GameObject): Renderer {
+
+        renderableList.addAll(gameObject.graphics)
 
         return this
     }

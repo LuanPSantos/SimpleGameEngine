@@ -2,7 +2,6 @@ package core.render
 
 import core.Window
 import core.math.Position
-import game.Sprite
 
 interface Renderable {
 

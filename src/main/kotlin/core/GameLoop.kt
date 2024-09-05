@@ -1,15 +1,12 @@
 package core
 
 import core.input.GameKeyEventHandler
-import core.input.GameMouseEventHandler
-import core.render.GameRenderer
-import core.update.GameUpdater
+import core.input.GameMouseInput
 
 class GameLoop(
-    private val gameRenderer: GameRenderer,
-    private val gameUpdater: GameUpdater,
+    private val scene: GameScene,
     private val keyInputHandler: GameKeyEventHandler,
-    private val mouseInputHandler: GameMouseEventHandler
+    private val mouseInputHandler: GameMouseInput
 ) : Runnable {
 
     private var running = false
@@ -38,7 +35,7 @@ class GameLoop(
             startTime = endTime
 
             while (unprocessedTime > DELTA_TIME) {
-                gameUpdater.update()
+                scene.update()
 
                 unprocessedTime -= DELTA_TIME
                 rendering = true
@@ -52,7 +49,7 @@ class GameLoop(
             }
 
             if (rendering) {
-                gameRenderer.render()
+                scene.render()
 
                 rendering = false
                 frames++
