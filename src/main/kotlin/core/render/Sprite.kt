@@ -1,13 +1,13 @@
 package core.render
 
 import core.Window
-import core.math.Position
+import core.math.Vector2
 import javax.imageio.ImageIO
 
 class Sprite(
     val width: Int,
     val height: Int,
-    var position: Position = Position(),
+    var position: Vector2<Int> = Vector2(0,0),
     val pixels: Array<IntArray> = Array(height) { IntArray(width) },
 ) : Renderable, Cloneable {
 
@@ -40,7 +40,7 @@ class Sprite(
 
         for (y in newY..<newHeight) {
             for (x in newX..<newWidth) {
-                val pixelPosition = Position(
+                val pixelPosition = Vector2(
                     position.x + x,
                     position.y + y
                 )
@@ -50,7 +50,7 @@ class Sprite(
     }
 
     public override fun clone(): Sprite {
-        return Sprite(width, height, position.copy(), pixels)
+        return Sprite(width, height, Vector2(position.x, position.y), pixels)
     }
 
     companion object {
@@ -64,7 +64,7 @@ class Sprite(
                 NULL, ZERO, width
             )
 
-            val sprite = Sprite(width, height, Position(ZERO, ZERO))
+            val sprite = Sprite(width, height, Vector2(ZERO, ZERO))
             for (y in 0..<height) {
                 for (x in 0..<width) {
                     sprite.pixels[y][x] = pixels[x + y * width]

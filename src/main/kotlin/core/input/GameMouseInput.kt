@@ -1,6 +1,6 @@
 package core.input
 
-import core.math.Position
+import core.math.Vector2
 import java.awt.event.MouseEvent
 import kotlin.math.roundToInt
 
@@ -10,17 +10,11 @@ class GameMouseInput(
     private val currentButtonsPressed = BooleanArray(256)
     private val previousButtonsPressed = BooleanArray(256)
 
-    var mousePosition: Position = Position()
+    var mousePosition: Vector2<Int> = Vector2(0, 0)
 
     fun update() {
         for (button in currentButtonsPressed.indices) {
             previousButtonsPressed[button] = currentButtonsPressed[button]
-
-//            if (isHoldingButton(button)) {
-//                mousePosition = Position(keyEvents[button]?.x ?: 0, keyEvents[button]?.y ?: 0)
-//            } else {
-//                keyEvents[button] = null
-//            }
         }
     }
 
@@ -33,14 +27,14 @@ class GameMouseInput(
     }
 
     fun mouseDragged(event: MouseEvent) {
-        mousePosition = Position(
+        mousePosition = Vector2(
             (event.x / scale).roundToInt(),
             (event.y / scale).roundToInt()
         )
     }
 
     fun mouseMoved(event: MouseEvent) {
-        mousePosition = Position(
+        mousePosition = Vector2(
             (event.x / scale).roundToInt(),
             (event.y / scale).roundToInt()
         )

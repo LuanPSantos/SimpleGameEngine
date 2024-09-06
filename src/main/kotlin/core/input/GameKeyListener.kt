@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 
 class GameKeyListener(
-    private val inputHandler: GameKeyEventHandler
+    private val inputHandler: GameKeyInput
 ) : KeyListener {
     override fun keyTyped(event: KeyEvent) {
 

@@ -1,11 +1,11 @@
 package core
 
-import core.input.GameKeyEventHandler
+import core.input.GameKeyInput
 import core.input.GameMouseInput
 
 class GameLoop(
     private val scene: GameScene,
-    private val keyInputHandler: GameKeyEventHandler,
+    private val keyInputHandler: GameKeyInput,
     private val mouseInputHandler: GameMouseInput
 ) : Runnable {
 

@@ -2,12 +2,12 @@ package core.render
 
 import core.GameLoop
 import core.Window
-import core.math.Position
+import core.math.Vector2
 
 class TileAnimation(
     private val frames: Array<Sprite>,
     duration: Double = 1.0,
-    var position: Position = Position()
+    var position: Vector2<Int> = Vector2(0, 0)
 ) : Renderable, Cloneable {
 
     private var timeCounter = 0.0
@@ -26,7 +26,7 @@ class TileAnimation(
     }
 
     public override fun clone(): TileAnimation {
-        return TileAnimation(frames, frameDuration * frames.size, position.copy())
+        return TileAnimation(frames, frameDuration * frames.size, Vector2(position.x, position.y))
     }
 
     companion object {
