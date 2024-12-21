@@ -7,7 +7,8 @@ import core.math.Vector2
 class TileAnimation(
     private val frames: Array<Sprite>,
     duration: Double = 1.0,
-    var position: Vector2<Int> = Vector2(0, 0)
+    var position: Vector2<Int> = Vector2(0, 0),
+    var scale: Vector2<Float> = Vector2(1f, 1f)
 ) : Renderable, Cloneable {
 
     private var timeCounter = 0.0
@@ -16,6 +17,7 @@ class TileAnimation(
 
     override fun render(screen: Window.Screen) {
         frames[currentFrame].position = position
+        frames[currentFrame].scale = scale
         frames[currentFrame].render(screen)
 
         timeCounter += GameLoop.DELTA_TIME

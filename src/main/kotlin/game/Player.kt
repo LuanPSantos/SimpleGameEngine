@@ -7,6 +7,7 @@ import core.input.GameMouseInput
 import core.math.Vector2
 import core.render.Sprite
 import core.render.TileAnimation
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class Player(
@@ -31,5 +32,18 @@ class Player(
         )
 
         sprite.position = position.let { Vector2(it.x.roundToInt(), it.y.roundToInt()) }
+
+        if(keyInput.getDirection().x < 0 && sprite.scale.x > 0) {
+            sprite.scale = sprite.scale.let { Vector2(-it.x, it.y) }
+        }
+        if(keyInput.getDirection().x > 0 && sprite.scale.x < 0) {
+            sprite.scale = sprite.scale.let { Vector2(abs(it.x), it.y) }
+        }
+        if(keyInput.getDirection().y < 0 && sprite.scale.y > 0) {
+            sprite.scale = sprite.scale.let { Vector2(it.x, -it.y) }
+        }
+        if(keyInput.getDirection().y > 0 && sprite.scale.y < 0) {
+            sprite.scale = sprite.scale.let { Vector2(it.x, abs(it.y)) }
+        }
     }
 }

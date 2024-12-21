@@ -3,11 +3,15 @@ package core.render
 import core.Window
 import core.math.Vector2
 import javax.imageio.ImageIO
+import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.round
 
 class Sprite(
     val width: Int,
     val height: Int,
     var position: Vector2<Int> = Vector2(0,0),
+    var scale: Vector2<Float> = Vector2(1f,1f),
     val pixels: Array<IntArray> = Array(height) { IntArray(width) },
 ) : Renderable, Cloneable {
 
@@ -19,8 +23,8 @@ class Sprite(
 
         var newX = 0
         var newY = 0
-        var newWidth = width
-        var newHeight = height
+        var newWidth = round(width * abs(scale.x) ).toInt()
+        var newHeight = round(height * abs(scale.y)).toInt()
 
         if (position.x < 0) {
             newX -= position.x
@@ -44,13 +48,33 @@ class Sprite(
                     position.x + x,
                     position.y + y
                 )
-                Renderable.setPixelOnScreen(pixels[y][x], pixelPosition, screen)
+
+                val scaledX = applyScale(x, width, newWidth, scale.x)
+                val scaledY = applyScale(y, height, newHeight, scale.y)
+
+                Renderable.setPixelOnScreen(pixels[scaledY][scaledX], pixelPosition, screen)
             }
         }
     }
 
     public override fun clone(): Sprite {
-        return Sprite(width, height, Vector2(position.x, position.y), pixels)
+        return Sprite(
+            width,
+            height,
+            Vector2(position.x, position.y),
+            Vector2(scale.x, scale.y),
+            pixels
+        )
+    }
+
+    private fun applyScale(index: Int, originalSize: Int, newSize: Int, scaleFactor: Float): Int {
+        var scaled = floor(index * (originalSize.toFloat() / newSize.toFloat())).toInt() % pixels.size
+
+        if(scaleFactor < 0) {
+            scaled = originalSize - 1 - scaled
+        }
+
+        return scaled
     }
 
     companion object {
