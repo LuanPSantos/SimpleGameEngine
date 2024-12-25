@@ -8,4 +8,8 @@ abstract class GameObject {
 
     abstract fun update()
 
+    fun render(screen: Screen) {
+        graphics.forEach { it.render(screen) }
+    }
+
 }

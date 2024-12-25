@@ -1,7 +1,7 @@
 package core.render
 
 import core.GameLoop
-import core.Window
+import core.Screen
 import core.math.Vector2
 
 class TileAnimation(
@@ -15,7 +15,7 @@ class TileAnimation(
     private val frameDuration = duration / frames.size
     private var currentFrame = 0
 
-    override fun render(screen: Window.Screen) {
+    override fun render(screen: Screen) {
         frames[currentFrame].position = position
         frames[currentFrame].scale = scale
         frames[currentFrame].render(screen)

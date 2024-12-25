@@ -1,9 +1,7 @@
 package core
 
-import core.render.Renderer
-
 class GameScene(
-    private val renderer: Renderer
+    private val screen: Screen
 ) {
 
     private val gameObjects = mutableListOf<GameObject>()
@@ -13,13 +11,13 @@ class GameScene(
     }
 
     fun render() {
-        renderer.render()
+        screen.clear()
+
+        gameObjects.forEach { it.render(screen) }
     }
 
     fun addGameObject(gameObject: GameObject): GameScene {
         gameObjects.add(gameObject)
-
-        renderer.add(gameObject)
 
         return this
     }

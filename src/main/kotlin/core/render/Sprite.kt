@@ -1,6 +1,6 @@
 package core.render
 
-import core.Window
+import core.Screen
 import core.math.Vector2
 import javax.imageio.ImageIO
 import kotlin.math.abs
@@ -15,7 +15,7 @@ class Sprite(
     val pixels: Array<IntArray> = Array(height) { IntArray(width) },
 ) : Renderable, Cloneable {
 
-    override fun render(screen: Window.Screen) {
+    override fun render(screen: Screen) {
         if (position.x < -width) return
         if (position.y < -height) return
         if (position.x >= screen.width) return
@@ -52,7 +52,7 @@ class Sprite(
                 val scaledX = applyScale(x, width, newWidth, scale.x)
                 val scaledY = applyScale(y, height, newHeight, scale.y)
 
-                Renderable.setPixelOnScreen(pixels[scaledY][scaledX], pixelPosition, screen)
+                screen.setPixelAt(pixels[scaledY][scaledX], pixelPosition)
             }
         }
     }

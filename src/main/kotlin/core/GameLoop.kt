@@ -4,9 +4,8 @@ import core.input.GameKeyInput
 import core.input.GameMouseInput
 
 class GameLoop(
-    private val scene: GameScene,
-    private val keyInputHandler: GameKeyInput,
-    private val mouseInputHandler: GameMouseInput
+    private val window: Window,
+    private val scene: GameScene
 ) : Runnable {
 
     private var running = false
@@ -50,6 +49,7 @@ class GameLoop(
 
             if (rendering) {
                 scene.render()
+                window.updateScreen()
 
                 rendering = false
                 frames++
@@ -57,8 +57,7 @@ class GameLoop(
                 Thread.sleep(ONE_MILLIS)
             }
 
-            keyInputHandler.update()
-            mouseInputHandler.update()
+            window.updateInput()
         }
 
         dispose()

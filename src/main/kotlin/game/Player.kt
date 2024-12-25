@@ -13,9 +13,10 @@ import kotlin.math.roundToInt
 class Player(
     private val mouseInput: GameMouseInput,
     private val keyInput: GameKeyInput,
-    private val speed: Float
+    private val speed: Float,
+    private val sprite: TileAnimation
 ) : GameObject() {
-    private val sprite: TileAnimation = TileAnimation.fromImage(Sprite.loadImage("/sprites/tileMap.png"), 32, 32, 1.0)
+
     private var position: Vector2<Double> = Vector2(0.0, 0.0)
 
     init {
@@ -26,10 +27,14 @@ class Player(
 
     override fun update() {
 
-        position = Vector2(
-            (speed * keyInput.getDirection().x * DELTA_TIME + position.x),
-            (speed * keyInput.getDirection().y * DELTA_TIME + position.y)
-        )
+        println(mouseInput.mousePosition)
+//
+//        position = Vector2(
+//            (speed * mouseInput.mousePosition.x * DELTA_TIME + position.x),
+//            (speed * mouseInput.mousePosition.y * DELTA_TIME + position.y)
+//        )
+
+        position = mouseInput.mousePosition.let { Vector2(it.x.toDouble(), it.y.toDouble()) }
 
         sprite.position = position.let { Vector2(it.x.roundToInt(), it.y.roundToInt()) }
 
