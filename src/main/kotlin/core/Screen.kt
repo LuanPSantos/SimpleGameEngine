@@ -1,7 +1,7 @@
 package core
 
 import core.math.Vector2
-import core.render.Sprite
+import core.render.Image
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
 
@@ -25,7 +25,7 @@ class Screen(
     fun setPixelAt(pixel: Int, position: Vector2<Int>) {
         if (position.x < 0 || position.x >= width
             || position.y < 0 || position.y >= height
-            || pixel == Sprite.PINK
+            || pixel == Image.PINK
         ) return
 
         pixels[position.x + position.y * width] = pixel

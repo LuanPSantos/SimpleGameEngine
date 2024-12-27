@@ -1,8 +1,5 @@
 package core
 
-import core.input.GameKeyInput
-import core.input.GameMouseInput
-
 class GameLoop(
     private val window: Window,
     private val scene: GameScene

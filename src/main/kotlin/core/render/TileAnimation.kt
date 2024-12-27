@@ -2,41 +2,36 @@ package core.render
 
 import core.GameLoop
 import core.Screen
-import core.math.Vector2
 
 class TileAnimation(
-    private val frames: Array<Sprite>,
+    private val frames: Array<Image>,
     duration: Double = 1.0,
-    var position: Vector2<Int> = Vector2(0, 0),
-    var scale: Vector2<Float> = Vector2(1f, 1f)
-) : Renderable, Cloneable {
+) : Renderable(frames.first().width, frames.first().height), Cloneable {
 
     private var timeCounter = 0.0
     private val frameDuration = duration / frames.size
     private var currentFrame = 0
 
-    override fun render(screen: Screen) {
-        frames[currentFrame].position = position
-        frames[currentFrame].scale = scale
-        frames[currentFrame].render(screen)
-
-        timeCounter += GameLoop.DELTA_TIME
-        if (timeCounter >= frameDuration) {
-            timeCounter = 0.0
-            currentFrame = (currentFrame + 1) % frames.size
-        }
+    override fun getPixelAt(x: Int, y: Int): Int {
+        //TODO fix animation
+//        timeCounter += GameLoop.DELTA_TIME
+//        if (timeCounter >= frameDuration) {
+//            timeCounter = 0.0
+//            currentFrame = (currentFrame + 1) % frames.size
+//        }
+        return frames[currentFrame].getPixelAt(x, y)
     }
 
     public override fun clone(): TileAnimation {
-        return TileAnimation(frames, frameDuration * frames.size, Vector2(position.x, position.y))
+        return TileAnimation(frames, frameDuration * frames.size)
     }
 
     companion object {
-        fun fromImage(tileMap: Sprite, tileWidth: Int, tileHeight: Int, duration: Double): TileAnimation {
+        fun fromImage(tileMap: Image, tileWidth: Int, tileHeight: Int, duration: Double): TileAnimation {
             val horizontalTileCount = (tileMap.width / tileWidth)
             val verticalTileCount = (tileMap.height / tileHeight)
             val frames = Array(horizontalTileCount * verticalTileCount) {
-                Sprite(tileWidth, tileHeight)
+                Image(tileWidth, tileHeight)
             }
 
             for (vertical in 0..<verticalTileCount) {

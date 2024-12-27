@@ -1,7 +1,9 @@
 package core
 
+import core.render.Camera
+
 class GameScene(
-    private val screen: Screen
+    private val camera: Camera
 ) {
 
     private val gameObjects = mutableListOf<GameObject>()
@@ -11,9 +13,9 @@ class GameScene(
     }
 
     fun render() {
-        screen.clear()
+        camera.screen.clear()
 
-        gameObjects.forEach { it.render(screen) }
+        gameObjects.forEach { camera.capture(it) }
     }
 
     fun addGameObject(gameObject: GameObject): GameScene {

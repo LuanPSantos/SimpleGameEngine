@@ -1,8 +1,9 @@
 package core.render
 
-import core.Screen
+abstract class Renderable(
+    val width: Int,
+    val height: Int
+) {
 
-interface Renderable {
-
-    fun render(screen: Screen)
+    abstract fun getPixelAt(x: Int, y: Int): Int
 }
