@@ -1,5 +1,6 @@
 package game
 
+import core.GameLoop
 import core.GameObject
 import core.input.GameKeyInput
 import core.input.GameMouseInput
@@ -18,6 +19,8 @@ class Player(
 
     init {
         graphics.add(sprite)
+
+        transform.position = Vector2(100f, 100f)
     }
 
     override fun update() {
@@ -28,21 +31,24 @@ class Player(
 //            (speed * mouseInput.mousePosition.y * DELTA_TIME + position.y)
 //        )
 
-//        position = mouseInput.mousePosition.let { Vector2(it.x.toDouble(), it.y.toDouble()) }
 
-        transform.position = mouseInput.mousePosition.let { Vector2(it.x.toFloat(), it.y.toFloat()) }
+        transform.position = transform.position.let { Vector2(
+            it.x + (keyInput.getDirection().x * speed * GameLoop.DELTA_TIME).toFloat(),
+            it.y + (keyInput.getDirection().y * speed * GameLoop.DELTA_TIME).toFloat()) }
 
-        if(keyInput.getDirection().x < 0 && transform.scale.x > 0) {
-            transform.scale = transform.scale.let { Vector2(-it.x, it.y) }
-        }
-        if(keyInput.getDirection().x > 0 && transform.scale.x < 0) {
-            transform.scale = transform.scale.let { Vector2(abs(it.x), it.y) }
-        }
-        if(keyInput.getDirection().y < 0 && transform.scale.y > 0) {
-            transform.scale = transform.scale.let { Vector2(it.x, -it.y) }
-        }
-        if(keyInput.getDirection().y > 0 && transform.scale.y < 0) {
-            transform.scale = transform.scale.let { Vector2(it.x, abs(it.y)) }
-        }
+
+
+//        if(keyInput.getDirection().x < 0 && transform.scale.x > 0) {
+//            transform.scale = transform.scale.let { Vector2(-it.x, it.y) }
+//        }
+//        if(keyInput.getDirection().x > 0 && transform.scale.x < 0) {
+//            transform.scale = transform.scale.let { Vector2(abs(it.x), it.y) }
+//        }
+//        if(keyInput.getDirection().y < 0 && transform.scale.y > 0) {
+//            transform.scale = transform.scale.let { Vector2(it.x, -it.y) }
+//        }
+//        if(keyInput.getDirection().y > 0 && transform.scale.y < 0) {
+//            transform.scale = transform.scale.let { Vector2(it.x, abs(it.y)) }
+//        }
     }
 }

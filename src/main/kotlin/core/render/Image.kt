@@ -9,7 +9,7 @@ class Image(
 ) : Renderable(width, height), Cloneable {
 
     override fun getPixelAt(x: Int, y: Int): Int {
-        return pixels[y % pixels.size][x % pixels.size]
+        return pixels[y][x]
     }
 
     public override fun clone(): Image {

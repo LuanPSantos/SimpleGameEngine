@@ -54,8 +54,6 @@ class Window(
         bufferStrategy.show()
     }
 
-
-
     fun updateInput() {
         keyInputHandler.update()
         mouseInputHandler.update()

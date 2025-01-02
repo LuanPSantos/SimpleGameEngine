@@ -3,7 +3,8 @@ package core
 import core.render.Camera
 
 class GameScene(
-    private val camera: Camera
+    private val camera: Camera,
+    private val screen: Screen
 ) {
 
     private val gameObjects = mutableListOf<GameObject>()
@@ -13,7 +14,7 @@ class GameScene(
     }
 
     fun render() {
-        camera.screen.clear()
+        screen.clear()
 
         gameObjects.forEach { camera.capture(it) }
     }
