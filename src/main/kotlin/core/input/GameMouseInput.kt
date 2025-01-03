@@ -2,6 +2,7 @@ package core.input
 
 import core.math.Vector2
 import java.awt.event.MouseEvent
+import java.awt.event.MouseWheelEvent
 import kotlin.math.roundToInt
 
 class GameMouseInput(
@@ -10,12 +11,15 @@ class GameMouseInput(
     private val currentButtonsPressed = BooleanArray(256)
     private val previousButtonsPressed = BooleanArray(256)
 
-    var mousePosition: Vector2<Int> = Vector2(0, 0)
+    private var mousePosition: Vector2<Int> = Vector2(0, 0)
+    private var mouseWheelDirection: Int = 0
 
     fun update() {
         for (button in currentButtonsPressed.indices) {
             previousButtonsPressed[button] = currentButtonsPressed[button]
         }
+
+        mouseWheelDirection = 0
     }
 
     fun mousePressed(event: MouseEvent) {
@@ -40,6 +44,10 @@ class GameMouseInput(
         )
     }
 
+    fun mouseWheelMoved(event: MouseWheelEvent) {
+        mouseWheelDirection = event.wheelRotation
+    }
+
     fun isHoldingButton(button: Int): Boolean {
         return currentButtonsPressed[button] && previousButtonsPressed[button]
     }
@@ -50,5 +58,9 @@ class GameMouseInput(
 
     fun isButtonReleased(button: Int): Boolean {
         return !currentButtonsPressed[button] && previousButtonsPressed[button]
+    }
+
+    fun mouseWheelDirection(): Int {
+        return mouseWheelDirection
     }
 }

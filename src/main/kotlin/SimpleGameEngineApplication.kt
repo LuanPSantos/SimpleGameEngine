@@ -22,39 +22,24 @@ fun main() {
     val scene = GameScene.new(camera, screen)
 
     val images = arrayOf(
-        Image(
-            2, 2,
-            arrayOf(
-                intArrayOf(Color.GREEN.rgb, Color.GREEN.rgb),
-                intArrayOf(Color.GREEN.rgb, Color.GREEN.rgb)
-            )
-        ),
-        Image(
-            2, 2,
-            arrayOf(
-                intArrayOf(Color.YELLOW.rgb, Color.YELLOW.rgb),
-                intArrayOf(Color.YELLOW.rgb, Color.YELLOW.rgb)
-            )
-        ),
-        Image(
-            2, 2,
-            arrayOf(
-                intArrayOf(Color.RED.rgb, Color.RED.rgb),
-                intArrayOf(Color.RED.rgb, Color.RED.rgb)
-            )
-        ),
-        Image(
-            2, 2,
-            arrayOf(
-                intArrayOf(Color.BLUE.rgb, Color.BLUE.rgb),
-                intArrayOf(Color.BLUE.rgb, Color.BLUE.rgb)
-            )
+        Color.WHITE.rgb,
+        Color.GREEN.rgb,
+        Color.BLUE.rgb,
+        Color.RED.rgb,
+        Color.CYAN.rgb,
+        Color.ORANGE.rgb,
+        Color.PINK.rgb,
+        Color.YELLOW.rgb
+    ).map { Image(
+        1, 1,
+        arrayOf(
+            intArrayOf(it)
         )
-    )
+    ) }
 
 
-    for (i in 0..300) {
-        scene.addGameObject(Player(Random.nextDouble(0.1, 1.0), images[Random.nextInt(images.size)]))
+    for (i in 0..1) {
+        scene.addGameObject(Player(Random.nextDouble(10.0), images[Random.nextInt(images.size)]))
     }
 
 

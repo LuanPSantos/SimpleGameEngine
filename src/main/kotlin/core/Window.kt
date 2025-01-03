@@ -34,6 +34,7 @@ class Window(
 
         canvas.addKeyListener(GameKeyListener(keyInputHandler))
         canvas.addMouseListener(GameMouseListener(mouseInputHandler))
+        canvas.addMouseWheelListener(GameMouseListener(mouseInputHandler))
         canvas.addMouseMotionListener(GameMouseListener(mouseInputHandler))
 
         defaultCloseOperation = EXIT_ON_CLOSE

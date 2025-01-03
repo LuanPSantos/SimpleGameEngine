@@ -1,12 +1,10 @@
 package core.input
 
-import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
+import java.awt.event.*
 
 class GameMouseListener(
     private val inputHandler: GameMouseInput
-) : MouseListener, MouseMotionListener {
+) : MouseListener, MouseMotionListener, MouseWheelListener {
     override fun mouseClicked(event: MouseEvent?) {
 
     }
@@ -33,6 +31,10 @@ class GameMouseListener(
 
     override fun mouseMoved(event: MouseEvent) {
         inputHandler.mouseMoved(event)
+    }
+
+    override fun mouseWheelMoved(event: MouseWheelEvent) {
+        inputHandler.mouseWheelMoved(event)
     }
 
 }

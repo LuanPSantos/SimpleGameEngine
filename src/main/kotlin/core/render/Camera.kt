@@ -13,7 +13,12 @@ class Camera(
 ) {
     val transform = Transform()
 
+    init {
+        transform.scale = Vector2(0.9, 1.0)
+    }
+
     fun capture(gameObject: GameObject) {
+        println(transform.scale)
         gameObject.graphics.forEach { renderable ->
 
             var newX = 0
@@ -26,8 +31,8 @@ class Camera(
 
             if (deltaX < -newWidth) return
             if (deltaY < -newHeight) return
-            if (deltaX >= screen.width) return
-            if (deltaY >= screen.height) return
+            if (deltaX >= screen.width * transform.scale.x) return
+            if (deltaY >= screen.height * transform.scale.y) return
 
             if (gameObject.transform.position.x < transform.position.x) {
                 newX += abs(deltaX)
@@ -37,11 +42,11 @@ class Camera(
                 newY += abs(deltaY)
             }
 
-            if (newWidth + gameObject.transform.position.x > transform.position.x + screen.width) {
+            if (newWidth + gameObject.transform.position.x > transform.position.x + screen.width * transform.scale.x) {
                 newWidth -= ((gameObject.transform.position.x + newWidth) - (transform.position.x)).toInt()
             }
 
-            if (newHeight + gameObject.transform.position.y > transform.position.y + screen.height) {
+            if (newHeight + gameObject.transform.position.y > transform.position.y + screen.height * transform.scale.y) {
                 newHeight -= ((gameObject.transform.position.y + newHeight) - (transform.position.y)).toInt()
             }
 
@@ -52,8 +57,11 @@ class Camera(
                         deltaY + y
                     )
 
-                    val scaledX = applyScale(x, renderable.width, gameObject.transform.scale.x)
-                    val scaledY = applyScale(y, renderable.height, gameObject.transform.scale.y)
+                    var scaledX = applyScale(x, renderable.width, gameObject.transform.scale.x)
+                    var scaledY = applyScale(y, renderable.height, gameObject.transform.scale.y)
+
+                    scaledX = applyScale(scaledX, renderable.width, 1/transform.scale.x)
+                    scaledY = applyScale(scaledY, renderable.height, 1/transform.scale.y)
 
                     screen.setPixelAt(renderable.getPixelAt(scaledX, scaledY), pixelPosition)
                 }
@@ -61,6 +69,7 @@ class Camera(
         }
     }
 
+    //TODO fazer isso certo
     private fun applyScale(index: Int, originalSize: Int, scaleFactor: Double): Int {
         var scaled = floor(index / abs(scaleFactor)).toInt()
 

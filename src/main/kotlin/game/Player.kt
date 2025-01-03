@@ -21,8 +21,8 @@ class Player(
     init {
         graphics.add(sprite)
 
-        transform.position = Vector2(Random.nextDouble(0.0, 480.0), Random.nextDouble(0.0, 360.0))
-        transform.scale = Vector2(Random.nextDouble(0.5, 3.0), Random.nextDouble(0.5, 3.0))
+        transform.position = Vector2(Random.nextDouble(100.0, 380.0), Random.nextDouble(100.0, 260.0))
+        transform.scale = Vector2(Random.nextDouble(30.0, 100.0), Random.nextDouble(30.0, 100.0))
     }
 
     private var angleCounter = Random.nextDouble(360.0)
