@@ -14,13 +14,12 @@ class CameraController(
     private val keyInput: GameKeyInput
 ) : GameObject() {
 
-    var angle = 0f
 
     override fun update() {
-        angle = (angle+(1))
+
         camera.transform.position = Vector2(
-            (speed * GameLoop.DELTA_TIME + camera.transform.position.x * cos(angle.toDouble())).toFloat(),
-            0f
+            camera.transform.position.x + keyInput.getDirection().x * speed * GameLoop.DELTA_TIME,
+            camera.transform.position.y + keyInput.getDirection().y * speed * GameLoop.DELTA_TIME
         )
     }
 }

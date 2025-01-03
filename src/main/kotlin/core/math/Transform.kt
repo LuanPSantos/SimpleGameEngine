@@ -1,6 +1,6 @@
 package core.math
 
 class Transform(
-    var position: Vector2<Float> = Vector2(0f, 0f),
-    var scale: Vector2<Float> = Vector2(1f, 1f)
+    var position: Vector2<Double> = Vector2(0.0, 0.0),
+    var scale: Vector2<Double> = Vector2(1.0, 1.0)
 )

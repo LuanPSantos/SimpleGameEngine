@@ -37,12 +37,12 @@ class Camera(
                 newY += abs(deltaY)
             }
 
-            if (newWidth + gameObject.transform.position.x > transform.position.x +screen.width) {
-                newWidth -= ((gameObject.transform.position.x + newWidth) - (transform.position.x + screen.width)).toInt()
+            if (newWidth + gameObject.transform.position.x > transform.position.x + screen.width) {
+                newWidth -= ((gameObject.transform.position.x + newWidth) - (transform.position.x)).toInt()
             }
 
-            if (newHeight + gameObject.transform.position.y > screen.height) {
-                newHeight -= ((gameObject.transform.position.y + newHeight) - (transform.position.y + screen.height)).toInt()
+            if (newHeight + gameObject.transform.position.y > transform.position.y + screen.height) {
+                newHeight -= ((gameObject.transform.position.y + newHeight) - (transform.position.y)).toInt()
             }
 
             for (y in newY..<newHeight) {
@@ -61,7 +61,7 @@ class Camera(
         }
     }
 
-    private fun applyScale(index: Int, originalSize: Int, scaleFactor: Float): Int {
+    private fun applyScale(index: Int, originalSize: Int, scaleFactor: Double): Int {
         var scaled = floor(index / abs(scaleFactor)).toInt()
 
         if(scaleFactor < 0) {

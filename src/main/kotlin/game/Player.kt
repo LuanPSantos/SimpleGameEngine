@@ -8,47 +8,36 @@ import core.math.Vector2
 import core.render.Image
 import core.render.TileAnimation
 import kotlin.math.abs
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.random.Random
 
 class Player(
-    private val mouseInput: GameMouseInput,
-    private val keyInput: GameKeyInput,
-    private val speed: Float,
+    private val speed: Double,
     sprite: Image
 ) : GameObject() {
 
     init {
         graphics.add(sprite)
 
-        transform.position = Vector2(100f, 100f)
+        transform.position = Vector2(Random.nextDouble(0.0, 480.0), Random.nextDouble(0.0, 360.0))
+        transform.scale = Vector2(Random.nextDouble(0.5, 3.0), Random.nextDouble(0.5, 3.0))
     }
 
+    private var angleCounter = Random.nextDouble(360.0)
+
     override fun update() {
+        angleCounter += GameLoop.DELTA_TIME * speed
 
-//
-//        position = Vector2(
-//            (speed * mouseInput.mousePosition.x * DELTA_TIME + position.x),
-//            (speed * mouseInput.mousePosition.y * DELTA_TIME + position.y)
-//        )
-
-
-        transform.position = transform.position.let { Vector2(
-            it.x + (keyInput.getDirection().x * speed * GameLoop.DELTA_TIME).toFloat(),
-            it.y + (keyInput.getDirection().y * speed * GameLoop.DELTA_TIME).toFloat()) }
-
-
-
-//        if(keyInput.getDirection().x < 0 && transform.scale.x > 0) {
-//            transform.scale = transform.scale.let { Vector2(-it.x, it.y) }
-//        }
-//        if(keyInput.getDirection().x > 0 && transform.scale.x < 0) {
-//            transform.scale = transform.scale.let { Vector2(abs(it.x), it.y) }
-//        }
-//        if(keyInput.getDirection().y < 0 && transform.scale.y > 0) {
-//            transform.scale = transform.scale.let { Vector2(it.x, -it.y) }
-//        }
-//        if(keyInput.getDirection().y > 0 && transform.scale.y < 0) {
-//            transform.scale = transform.scale.let { Vector2(it.x, abs(it.y)) }
-//        }
+        if (angleCounter >= 360) {
+            angleCounter = 0.0
+        }
+        transform.position = transform.position.let {
+            Vector2(
+                it.x + sin(angleCounter),
+                it.y + cos(angleCounter)
+            )
+        }
     }
 }
