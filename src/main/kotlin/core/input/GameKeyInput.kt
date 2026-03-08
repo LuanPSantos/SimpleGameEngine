@@ -21,6 +21,7 @@ class GameKeyInput {
     }
 
     fun keyReleased(event: KeyEvent) {
+        println("oi")
         currentKeysPressed[event.keyCode] = false
         keyEvents[event.keyCode] = event
     }
@@ -30,10 +31,13 @@ class GameKeyInput {
     }
 
     fun isKeyPressed(keyCode: Int): Boolean {
+            println("oi ${currentKeysPressed[keyCode]} && ${!previousKeysPressed[keyCode]}")
         return currentKeysPressed[keyCode] && !previousKeysPressed[keyCode]
     }
 
     fun isKeyReleased(keyCode: Int): Boolean {
+        if(currentKeysPressed[keyCode] && !previousKeysPressed[keyCode])
+            println("oi ${currentKeysPressed[keyCode]} && ${!previousKeysPressed[keyCode]}")
         return !currentKeysPressed[keyCode] && previousKeysPressed[keyCode]
     }
 

@@ -16,25 +16,34 @@ class CameraController(
     private val keyInput: GameKeyInput
 ) : GameObject() {
 
+    var counter: Double = 0.0
 
     override fun update() {
 
-        val zoom = if (keyInput.isHoldingKey(KeyEvent.VK_C)) {
-            1.0
-        } else if (keyInput.isHoldingKey(KeyEvent.VK_V)) {
-            -1.0
+        val zoom = if (keyInput.isKeyPressed(KeyEvent.VK_C)) {
+            println("asdasdasd")
+            1.5
+        } else if (keyInput.isKeyPressed(KeyEvent.VK_V)) {
+            0.5
         } else {
-            0.0
+            1.0
         }
 
+
+
         camera.transform.scale = camera.transform.scale.let { Vector2(
-            it.x + zoom ,
-            it.y + zoom
+            it.x * zoom,
+            it.y * zoom
         ) }
+
+
+
+
 
         camera.transform.position = Vector2(
             camera.transform.position.x + keyInput.getDirection().x * speed * GameLoop.DELTA_TIME,
             camera.transform.position.y + keyInput.getDirection().y * speed * GameLoop.DELTA_TIME
         )
+
     }
 }

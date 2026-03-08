@@ -1,7 +1,6 @@
 package core
 
 import core.math.Vector2
-import core.render.Camera
 import core.render.Image
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
