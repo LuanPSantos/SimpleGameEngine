@@ -15,13 +15,14 @@ import kotlin.random.Random
 
 class Player(
     private val speed: Double,
-    sprite: Image
+    sprite: Image,
+    private val mouseInput: GameMouseInput
 ) : GameObject() {
 
     init {
         graphics.add(sprite)
 
-        transform.position = Vector2(Random.nextDouble(0.0, 10.0), Random.nextDouble(0.0, 10.0))
+        transform.position = Vector2(Random.nextDouble(220.0, 260.0), Random.nextDouble(160.0, 200.0))
         transform.scale = Vector2(30.0, 30.0)
     }
 
@@ -33,11 +34,9 @@ class Player(
         if (angleCounter >= 360) {
             angleCounter = 0.0
         }
-//        transform.position = transform.position.let {
-//            Vector2(
-//                it.x + sin(angleCounter),
-//                it.y + cos(angleCounter)
-//            )
-//        }
+        transform.position =  Vector2(
+            mouseInput.mousePosition().x.toDouble(),
+            mouseInput.mousePosition().y.toDouble()
+        )
     }
 }

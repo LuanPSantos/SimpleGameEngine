@@ -2,7 +2,6 @@ package core.render
 
 import core.GameObject
 import core.Screen
-import core.math.Transform
 import core.math.Vector2
 import java.awt.Color
 import kotlin.math.abs
@@ -12,78 +11,80 @@ import kotlin.math.round
 class Camera(
     private val screen: Screen
 ) {
-    val transform = Transform()
-
-    init {
-        transform.scale = Vector2(0.1, 0.1)
-    }
+    var zoom = 2f
 
     fun capture(gameObject: GameObject) {
 
         gameObject.graphics.forEach { renderable ->
-            // o zoom ta funcionando porem precisa ser invertido.
-            var newX = 0
-            var newY = 0
-            var newWidth = round(renderable.width * abs(gameObject.transform.scale.x) * transform.scale.x).toInt()
-            var newHeight = round(renderable.height * abs(gameObject.transform.scale.y) * transform.scale.y).toInt()
+            val zoomedWidth = round(screen.width / zoom).toInt()
+            val zoomedHeight = round(screen.height / zoom).toInt()
 
-            val deltaX = (gameObject.transform.position.x - transform.position.x).toInt()
-            val deltaY = (gameObject.transform.position.y - transform.position.y).toInt()
+            val newCameraBoundaryX = (screen.width - zoomedWidth) / 2
+            val newCameraBoundaryY = (screen.height - zoomedHeight) / 2
 
-            if (deltaX < -newWidth) return
-            if (deltaY < -newHeight) return
-            if (deltaX >= screen.width * transform.scale.x) return
-            if (deltaY >= screen.height * transform.scale.y) return
+            val objectRelativePositionX = (gameObject.transform.position.x - newCameraBoundaryX).toInt()
+            val objectRelativePositionY = (gameObject.transform.position.y - newCameraBoundaryY).toInt()
 
-            if (gameObject.transform.position.x < transform.position.x) {
-                newX = round(abs(deltaX) * transform.scale.x).toInt()
-            }
+            // Object out of view is ignored
+            if (objectRelativePositionX < -gameObject.transform.scale.x) return
+            if (objectRelativePositionY < -gameObject.transform.scale.y) return
+            if (objectRelativePositionX >= zoomedWidth) return
+            if (objectRelativePositionY >= zoomedHeight) return
 
-            if (gameObject.transform.position.y < transform.position.y) {
-                newY = round(abs(deltaY) * transform.scale.y).toInt()
-            }
+            val position = Vector2(
+                round(gameObject.transform.position.x).toInt(),
+                round(gameObject.transform.position.y).toInt()
+            )
 
-            if (newWidth + gameObject.transform.position.x > transform.position.x + screen.width * transform.scale.x) {
-                newWidth -= ((gameObject.transform.position.x + newWidth) - (transform.position.x + screen.width * transform.scale.x)).toInt()
-            }
-
-            if (newHeight + gameObject.transform.position.y > transform.position.y + screen.height * transform.scale.y) {
-                newHeight -= ((gameObject.transform.position.y + newHeight) - (transform.position.y + screen.height * transform.scale.y)).toInt()
-            }
-
-            for (y in newY..<newHeight) {
-                for (x in newX..<newWidth) {
+            val scale = Vector2(
+                round(gameObject.transform.scale.x * renderable.width).toInt(),
+                round(gameObject.transform.scale.y * renderable.height).toInt()
+            )
 
 
-                    var scaledX = applyScale(x, renderable.width, gameObject.transform.scale.x)
-                    var scaledY = applyScale(y, renderable.height, gameObject.transform.scale.y)
-//
-//                    scaledX = applyScale(deltaX + x, screen.width, transform.scale.x)
-//                    scaledY = applyScale(deltaY + y, screen.height, transform.scale.y)
+            for (y in 0..<scale.y) {
+                for (x in 0..<scale.x) {
 
                     val pixelPosition = Vector2(
-                        deltaX + x,
-                        deltaY + y
+                        position.x + x,
+                        position.y + y
                     )
 
-                    if(pixelPosition.x <= 2 || pixelPosition.x +2 >= screen.width * transform.scale.x ||
-                        pixelPosition.y <= 2 || pixelPosition.y +2>= screen.height * transform.scale.y) {
+                    val originalPixPosition = getRelativePixelPosition(Vector2(x, y), renderable, gameObject.transform.scale)
+
+                    if(
+                        pixelPosition.x < (newCameraBoundaryX + 2) ||
+                        pixelPosition.y < (newCameraBoundaryY + 2) ||
+                        pixelPosition.x >= (newCameraBoundaryX + zoomedWidth - 2) ||
+                        pixelPosition.y >= newCameraBoundaryY + zoomedHeight - 2) {
+
                         screen.setPixelAt(Color.GREEN.rgb, pixelPosition)
                     }else{
-                        screen.setPixelAt(renderable.getPixelAt(scaledX, scaledY), pixelPosition)
+                        screen.setPixelAt(renderable.getPixelAt(originalPixPosition.x, originalPixPosition.y), pixelPosition)
                     }
-
                 }
             }
         }
     }
 
-    //TODO fazer isso certo
-    private fun applyScale(index: Int, originalSize: Int, scaleFactor: Double): Int {
-        var scaled = floor(index / abs(scaleFactor)).toInt()
+    private fun getRelativePixelPosition(pixelPosition: Vector2<Int>, renderable: Renderable, scaleFactor: Vector2<Double>): Vector2<Int> {
+        var scaled = Vector2(
+            floor(pixelPosition.x / abs(scaleFactor.x)).toInt(),
+            floor(pixelPosition.y / abs(scaleFactor.y)).toInt()
+        )
 
-        if(scaleFactor < 0) {
-            scaled = (originalSize - scaled) - 1
+        if(scaleFactor.x < 0) {
+            scaled = Vector2(
+                (renderable.width - scaled.x) - 1,
+                scaled.y
+            )
+        }
+
+        if(scaleFactor.y < 0) {
+            scaled = Vector2(
+                scaled.x,
+                (renderable.height - scaled.y) - 1
+            )
         }
 
         return scaled

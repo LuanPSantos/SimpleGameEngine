@@ -23,7 +23,7 @@ class Screen(
     }
 
     fun setPixelAt(pixel: Int, position: Vector2<Int>) {
-        if (position.x < 0 || position.x >= width
+        if (position.x !in 0..<width
             || position.y < 0 || position.y >= height
             || pixel == Image.PINK
         ) return

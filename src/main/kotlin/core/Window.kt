@@ -7,7 +7,6 @@ import core.input.GameMouseListener
 import java.awt.BorderLayout
 import java.awt.Canvas
 import java.awt.Dimension
-import java.awt.Graphics
 import java.awt.image.BufferStrategy
 import javax.swing.JFrame
 
@@ -20,7 +19,6 @@ class Window(
 
 
     private val bufferStrategy: BufferStrategy
-    private val graphics: Graphics
     private val canvas: Canvas
 
 
@@ -47,11 +45,12 @@ class Window(
 
         canvas.createBufferStrategy(NUMBER_OF_BUFFERS)
         bufferStrategy = canvas.bufferStrategy
-        graphics = bufferStrategy.drawGraphics
     }
 
     fun updateScreen() {
+        val graphics = bufferStrategy.drawGraphics
         graphics.drawImage(screen.bufferedImage, START_X, START_Y, canvas.width, canvas.height, null)
+        graphics.dispose()
         bufferStrategy.show()
     }
 

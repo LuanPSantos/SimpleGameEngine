@@ -21,7 +21,6 @@ class GameKeyInput {
     }
 
     fun keyReleased(event: KeyEvent) {
-        println("oi")
         currentKeysPressed[event.keyCode] = false
         keyEvents[event.keyCode] = event
     }

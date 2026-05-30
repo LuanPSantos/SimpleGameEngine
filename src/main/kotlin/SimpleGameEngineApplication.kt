@@ -38,12 +38,12 @@ fun main() {
     ) }
 
 
-    for (i in 0..1) {
-        scene.addGameObject(Player(Random.nextDouble(10.0), images[Random.nextInt(images.size)]))
-    }
+
+    scene.addGameObject(Player(Random.nextDouble(10.0), images[Random.nextInt(images.size)], mouseInputHandler))
 
 
-    scene.addGameObject(CameraController(camera, 100f, keyInputHandler))
+
+    scene.addGameObject(CameraController(camera, 100f,  mouseInputHandler))
 
     val gameLoop = GameLoop(window, scene)
 

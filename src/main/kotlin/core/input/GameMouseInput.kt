@@ -46,6 +46,8 @@ class GameMouseInput(
 
     fun mouseWheelMoved(event: MouseWheelEvent) {
         mouseWheelDirection = event.wheelRotation
+
+        println("mouseWheelMoved $mouseWheelDirection")
     }
 
     fun isHoldingButton(button: Int): Boolean {
@@ -62,5 +64,9 @@ class GameMouseInput(
 
     fun mouseWheelDirection(): Int {
         return mouseWheelDirection
+    }
+
+    fun mousePosition(): Vector2<Int> {
+        return mousePosition
     }
 }
