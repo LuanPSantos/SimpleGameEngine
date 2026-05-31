@@ -1,28 +1,49 @@
 package game
 
-import core.GameLoop
 import core.GameObject
-import core.input.GameKeyInput
 import core.input.GameMouseInput
 import core.math.Vector2
 import core.render.Camera
-import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.round
 
 class CameraController(
     private val camera: Camera,
-    private val speed: Float,
-    private val gameMouseInput: GameMouseInput
-) : GameObject() {
+    gameMouseInput: GameMouseInput
+) : GameObject() , GameMouseInput.GameMouseInputListener {
+
+    private var origin: Vector2<Int> = Vector2(0, 0)
+    private var mousePosition: Vector2<Int> = Vector2(0, 0)
+
+    init {
+        gameMouseInput.gameMouseInputListeners.add(this)
+    }
 
     override fun update() {
-        //if(gameMouseInput.isHoldingButton(MouseEvent.BUTTON1)) {
-        //    println("Mouse Button 1")
-        //    camera.transform.position =
-        //        Vector2(gameMouseInput.mousePosition().x.toDouble(), gameMouseInput.mousePosition().y.toDouble())
-        //}
 
     }
+
+    override fun mousePressed(event: MouseEvent, mousePosition: Vector2<Int>) {
+        when (event.button) {
+            MouseEvent.BUTTON1 -> {
+                origin = mousePosition
+                this.mousePosition = mousePosition
+            }
+        }
+    }
+
+    override fun mouseReleased(event: MouseEvent, mousePosition: Vector2<Int>) {
+
+    }
+
+    override fun mouseDragged(event: MouseEvent, mousePosition: Vector2<Int>) {
+        val movement = Vector2(mousePosition.x - origin.x, mousePosition.y - origin.y)
+        camera.transform.position = Vector2(camera.transform.position.x + movement.x.toDouble(), camera.transform.position.y + movement.y.toDouble())
+        origin  = mousePosition
+    }
+
+    override fun mouseWheelMoved(event: MouseEvent, mouseWheelDirection: Int) {
+        camera.zoom += mouseWheelDirection * 0.01
+    }
+
 }

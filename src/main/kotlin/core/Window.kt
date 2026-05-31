@@ -56,7 +56,6 @@ class Window(
 
     fun updateInput() {
         keyInputHandler.update()
-        mouseInputHandler.update()
     }
 
     companion object {

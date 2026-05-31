@@ -19,11 +19,13 @@ class Player(
     private val mouseInput: GameMouseInput
 ) : GameObject() {
 
+    val orb: Vector2<Double>
+
     init {
         graphics.add(sprite)
 
-        transform.position = Vector2(Random.nextDouble(220.0, 260.0), Random.nextDouble(160.0, 200.0))
-        transform.scale = Vector2(30.0, 30.0)
+        orb = Vector2(Random.nextDouble(0.0, 1480.0), Random.nextDouble(0.0, 1360.0))
+        transform.scale = Vector2(20.0, 20.0)
     }
 
     private var angleCounter = Random.nextDouble(360.0)
@@ -35,8 +37,8 @@ class Player(
             angleCounter = 0.0
         }
         transform.position =  Vector2(
-            mouseInput.mousePosition().x.toDouble(),
-            mouseInput.mousePosition().y.toDouble()
+            orb.x + 10 * cos(angleCounter),
+            orb.y + 10 * sin(angleCounter)
         )
     }
 }

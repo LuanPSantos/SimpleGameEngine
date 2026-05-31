@@ -5,29 +5,18 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import kotlin.math.roundToInt
 
-class GameMouseInput(
+open class GameMouseInput(
     private val scale: Double
 ) {
-    private val currentButtonsPressed = BooleanArray(256)
-    private val previousButtonsPressed = BooleanArray(256)
-
-    private var mousePosition: Vector2<Int> = Vector2(0, 0)
-    private var mouseWheelDirection: Int = 0
-
-    fun update() {
-        for (button in currentButtonsPressed.indices) {
-            previousButtonsPressed[button] = currentButtonsPressed[button]
-        }
-
-        mouseWheelDirection = 0
-    }
+    protected var mousePosition: Vector2<Int> = Vector2(0, 0)
+    val gameMouseInputListeners: MutableList<GameMouseInputListener> = mutableListOf()
 
     fun mousePressed(event: MouseEvent) {
-        currentButtonsPressed[event.button] = true
+        gameMouseInputListeners.forEach { it.mousePressed(event, mousePosition) }
     }
 
     fun mouseReleased(event: MouseEvent) {
-        currentButtonsPressed[event.button] = false
+        gameMouseInputListeners.forEach { it.mouseReleased(event, mousePosition) }
     }
 
     fun mouseDragged(event: MouseEvent) {
@@ -35,6 +24,8 @@ class GameMouseInput(
             (event.x / scale).roundToInt(),
             (event.y / scale).roundToInt()
         )
+
+        gameMouseInputListeners.forEach { it.mouseDragged(event, mousePosition) }
     }
 
     fun mouseMoved(event: MouseEvent) {
@@ -45,28 +36,13 @@ class GameMouseInput(
     }
 
     fun mouseWheelMoved(event: MouseWheelEvent) {
-        mouseWheelDirection = event.wheelRotation
-
-        println("mouseWheelMoved $mouseWheelDirection")
+        gameMouseInputListeners.forEach { it.mouseWheelMoved(event, event.wheelRotation) }
     }
 
-    fun isHoldingButton(button: Int): Boolean {
-        return currentButtonsPressed[button] && previousButtonsPressed[button]
-    }
-
-    fun isButtonPressed(button: Int): Boolean {
-        return currentButtonsPressed[button] && !previousButtonsPressed[button]
-    }
-
-    fun isButtonReleased(button: Int): Boolean {
-        return !currentButtonsPressed[button] && previousButtonsPressed[button]
-    }
-
-    fun mouseWheelDirection(): Int {
-        return mouseWheelDirection
-    }
-
-    fun mousePosition(): Vector2<Int> {
-        return mousePosition
+    interface GameMouseInputListener {
+        fun mousePressed(event: MouseEvent, mousePosition: Vector2<Int>)
+        fun mouseReleased(event: MouseEvent, mousePosition: Vector2<Int>)
+        fun mouseDragged(event: MouseEvent, mousePosition: Vector2<Int>)
+        fun mouseWheelMoved(event: MouseEvent, mouseWheelDirection: Int)
     }
 }
