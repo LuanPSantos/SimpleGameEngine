@@ -4,6 +4,8 @@ import core.GameObject
 import core.Screen
 import core.math.Transform
 import core.math.Vector2
+import java.awt.Color
+import javax.swing.Spring.scale
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.round
@@ -12,12 +14,28 @@ class Camera(
     private val screen: Screen
 ) {
 
-    var zoom = 0.5
-    val transform = Transform()
+    private var zoom = 1.0
+    val transform:Transform = Transform()
 
+    init {
+        transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
+        transform.position = Vector2(transform.position.x + ((0 - transform.scale.x)/2), transform.position.y + ((0 - transform.scale.y)/2))
+    }
+
+    fun updateZoom(zoomDirection: Int) {
+        if(zoomDirection > 0) {
+            zoom *= 0.9
+        } else if(zoomDirection < 0) {
+            zoom *= 1.1
+        }
+        val previous = transform.scale.copy()
+        transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
+
+        transform.position = Vector2(transform.position.x + ((previous.x - transform.scale.x)/2), transform.position.y + ((previous.y - transform.scale.y)/2))
+    }
 
     fun capture(gameObject: GameObject) {
-        transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
+
         val ratio = Vector2(
             (transform.scale.x) / screen.width,
             (transform.scale.y) / screen.height
@@ -27,9 +45,9 @@ class Camera(
 
             // Object out of view is ignored
             if (transform.position.x > (gameObject.transform.position.x + gameObject.transform.scale.x)) return
-            if (transform.position.y > (gameObject.transform.position.y + gameObject.transform.scale.y)) return
+            if (transform.position.y > -(gameObject.transform.position.y + gameObject.transform.scale.y)) return
             if (transform.position.x + transform.scale.x < gameObject.transform.position.x) return
-            if (transform.position.y + transform.scale.y < gameObject.transform.position.y) return
+            if (transform.position.y + transform.scale.y < -gameObject.transform.position.y) return
 
             val objectIntScaled = Vector2(
                 floor(gameObject.transform.scale.x * renderable.width * zoom).toInt(),
@@ -40,8 +58,8 @@ class Camera(
                 for (x in 0..<objectIntScaled.x) {
 
                     val pixelScreenPosition = Vector2(
-                        round(((gameObject.transform.position.x + x) - transform.position.x) / ratio.x).toInt() ,
-                        round(((gameObject.transform.position.y + y) - transform.position.y) / ratio.y).toInt()
+                        round(((gameObject.transform.position.x + x) - transform.position.x) / ratio.x).toInt(),
+                        round((-(gameObject.transform.position.y + y) - transform.position.y) / ratio.y).toInt()
                     )
 
                     val originalPixPosition =

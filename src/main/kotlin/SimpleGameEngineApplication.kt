@@ -5,6 +5,7 @@ import core.render.Camera
 import core.render.Image
 import core.render.TileAnimation
 import game.CameraController
+import game.CartesianPlane
 import game.Player
 import java.awt.Color
 import kotlin.random.Random
@@ -38,11 +39,11 @@ fun main() {
     ) }
 
 
-    for(i in 0..100) {
-        scene.addGameObject(Player(Random.nextDouble(10.0, 50.0), images[Random.nextInt(images.size)], mouseInputHandler))
-    }
+//    for(i in 0..1000) {
+//        scene.addGameObject(Player(Random.nextDouble(10.0, 50.0), images[Random.nextInt(images.size)], mouseInputHandler))
+//    }
 
-
+    scene.addGameObject(CartesianPlane())
 
     scene.addGameObject(CameraController(camera, mouseInputHandler))
 

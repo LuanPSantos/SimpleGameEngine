@@ -24,7 +24,7 @@ class Player(
     init {
         graphics.add(sprite)
 
-        orb = Vector2(Random.nextDouble(0.0, 1480.0), Random.nextDouble(0.0, 1360.0))
+        orb = Vector2(Random.nextDouble(-1480.0, 1480.0), Random.nextDouble(-1360.0, 1360.0))
         transform.scale = Vector2(20.0, 20.0)
     }
 

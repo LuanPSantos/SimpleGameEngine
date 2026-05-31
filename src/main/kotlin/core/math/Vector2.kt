@@ -1,6 +1,6 @@
 package core.math
 
-class Vector2<T>(
+data class Vector2<T>(
     val x: T,
     val y: T
 ) {

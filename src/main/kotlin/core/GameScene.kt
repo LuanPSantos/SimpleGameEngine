@@ -1,6 +1,5 @@
 package core
 
-import core.math.Vector2
 import core.render.Camera
 
 class GameScene private constructor(
@@ -9,7 +8,6 @@ class GameScene private constructor(
 ) {
 
     private val gameObjects = mutableListOf<GameObject>()
-    private val origin = Vector2(0.0, 0.0)
 
     fun update() {
         gameObjects.forEach { it.update() }
@@ -17,6 +15,8 @@ class GameScene private constructor(
 
     fun render() {
         screen.clear()
+
+
 
         gameObjects.forEach { camera.capture(it) }
     }
