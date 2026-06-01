@@ -16,10 +16,15 @@ class Camera(
 
     private var zoom = 1.0
     val transform:Transform = Transform()
+    private var ratio: Vector2<Double> = Vector2(0.0, 0.0)
 
     init {
         transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
         transform.position = Vector2(transform.position.x + ((0 - transform.scale.x)/2), transform.position.y + ((0 - transform.scale.y)/2))
+        ratio = Vector2(
+            (transform.scale.x) / screen.width,
+            (transform.scale.y) / screen.height
+        )
     }
 
     fun updateZoom(zoomDirection: Int) {
@@ -32,14 +37,15 @@ class Camera(
         transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
 
         transform.position = Vector2(transform.position.x + ((previous.x - transform.scale.x)/2), transform.position.y + ((previous.y - transform.scale.y)/2))
+        ratio = Vector2(
+            (transform.scale.x) / screen.width,
+            (transform.scale.y) / screen.height
+        )
     }
 
     fun capture(gameObject: GameObject) {
 
-        val ratio = Vector2(
-            (transform.scale.x) / screen.width,
-            (transform.scale.y) / screen.height
-        )
+
 
         gameObject.graphics.forEach { renderable ->
 
@@ -57,10 +63,7 @@ class Camera(
             for (y in 0..<objectIntScaled.y) {
                 for (x in 0..<objectIntScaled.x) {
 
-                    val pixelScreenPosition = Vector2(
-                        round(((gameObject.transform.position.x + x) - transform.position.x) / ratio.x).toInt(),
-                        round((-(gameObject.transform.position.y + y) - transform.position.y) / ratio.y).toInt()
-                    )
+                    val pixelScreenPosition = worldToScreenPosition(Vector2(gameObject.transform.position.x + x, gameObject.transform.position.y + y))
 
                     val originalPixPosition =
                         getRelativePixelPosition(Vector2(x, y), renderable, gameObject.transform.scale, ratio)
@@ -71,6 +74,16 @@ class Camera(
                 }
             }
         }
+    }
+
+    fun worldToScreenPosition(
+        worldPosition: Vector2<Double>
+    ): Vector2<Int> {
+        val pixelScreenPosition = Vector2(
+            round(((worldPosition.x) - transform.position.x) / ratio.x).toInt(),
+            round((-(worldPosition.y) - transform.position.y) / ratio.y).toInt()
+        )
+        return pixelScreenPosition
     }
 
     private fun getRelativePixelPosition(

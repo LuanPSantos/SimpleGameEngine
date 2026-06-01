@@ -1,8 +1,8 @@
 package core.render
 
 abstract class Renderable(
-    val width: Int,
-    val height: Int
+    var width: Int,
+    var height: Int
 ) {
 
     abstract fun getPixelAt(x: Int, y: Int): Int
