@@ -5,6 +5,6 @@ data class Vector2<T>(
     val y: T
 ) {
     override fun toString(): String {
-        return "x: $x, y: $y"
+        return "($x, $y)"
     }
 }

@@ -38,7 +38,7 @@ class CameraController(
 
     override fun mouseDragged(event: MouseEvent, mousePosition: Vector2<Int>) {
         val movement = Vector2(-(mousePosition.x - origin.x), -(mousePosition.y - origin.y))
-        camera.transform.position = Vector2(camera.transform.position.x + movement.x.toDouble(), camera.transform.position.y + movement.y.toDouble())
+        camera.position = Vector2(camera.position.x + movement.x.toDouble(), camera.position.y + movement.y.toDouble())
         origin  = mousePosition
     }
 

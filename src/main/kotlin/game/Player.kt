@@ -16,7 +16,6 @@ import kotlin.random.Random
 class Player(
     private val speed: Double,
     sprite: Image,
-    private val mouseInput: GameMouseInput
 ) : GameObject() {
 
     val orb: Vector2<Double>

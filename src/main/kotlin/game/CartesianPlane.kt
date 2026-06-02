@@ -12,22 +12,16 @@ class CartesianPlane(
 ) : GameObject() {
     private val grid = Grid(camera)
     init {
-        graphics.add(grid)
+        //graphics.add(grid)
     }
     override fun update() {
-        grid.width = round(camera.transform.scale.x).toInt()
-        grid.height = round(camera.transform.scale.y).toInt()
-        transform.position = camera.transform.position
+
 
     }
 
     class Grid(private val camera: Camera): Renderable(0, 0) {
         override fun getPixelAt(x: Int, y: Int): Int {
-            return if((round(camera.transform.position.x).toInt() + x) == 0 || round(camera.transform.position.y + y).toInt() == 0) {
-                Color.DARK_GRAY.rgb
-            }else{
-                Color.MAGENTA.rgb
-            }
+            return Color.DARK_GRAY.rgb
         }
     }
 }

@@ -6,8 +6,11 @@ import core.math.Transform
 import core.math.Vector2
 import java.awt.Color
 import javax.swing.Spring.scale
+import kotlin.contracts.contract
 import kotlin.math.abs
 import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.round
 
 class Camera(
@@ -15,102 +18,76 @@ class Camera(
 ) {
 
     private var zoom = 1.0
-    val transform:Transform = Transform()
-    private var ratio: Vector2<Double> = Vector2(0.0, 0.0)
-
-    init {
-        transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
-        transform.position = Vector2(transform.position.x + ((0 - transform.scale.x)/2), transform.position.y + ((0 - transform.scale.y)/2))
-        ratio = Vector2(
-            (transform.scale.x) / screen.width,
-            (transform.scale.y) / screen.height
-        )
-    }
+    var position: Vector2<Double> = Vector2(-50.0, -50.0)
 
     fun updateZoom(zoomDirection: Int) {
-        if(zoomDirection > 0) {
+        if (zoomDirection > 0) {
             zoom *= 0.9
-        } else if(zoomDirection < 0) {
+        } else if (zoomDirection < 0) {
             zoom *= 1.1
         }
-        val previous = transform.scale.copy()
-        transform.scale = Vector2(screen.width / zoom, screen.height / zoom)
-
-        transform.position = Vector2(transform.position.x + ((previous.x - transform.scale.x)/2), transform.position.y + ((previous.y - transform.scale.y)/2))
-        ratio = Vector2(
-            (transform.scale.x) / screen.width,
-            (transform.scale.y) / screen.height
-        )
     }
 
     fun capture(gameObject: GameObject) {
 
 
-
         gameObject.graphics.forEach { renderable ->
 
-            // Object out of view is ignored
-            if (transform.position.x > (gameObject.transform.position.x + gameObject.transform.scale.x)) return
-            if (transform.position.y > -(gameObject.transform.position.y + gameObject.transform.scale.y)) return
-            if (transform.position.x + transform.scale.x < gameObject.transform.position.x) return
-            if (transform.position.y + transform.scale.y < -gameObject.transform.position.y) return
-
-            val objectIntScaled = Vector2(
-                floor(gameObject.transform.scale.x * renderable.width * zoom).toInt(),
-                floor(gameObject.transform.scale.y * renderable.height * zoom).toInt()
+            //texel world position
+            val leftBottom = Vector2(
+                gameObject.transform.position.x,
+                gameObject.transform.position.y
             )
 
-            for (y in 0..<objectIntScaled.y) {
-                for (x in 0..<objectIntScaled.x) {
+            //texel world position
+            val rightTop = Vector2(
+                leftBottom.x + gameObject.transform.scale.x,
+                leftBottom.y + gameObject.transform.scale.y
+            )
 
-                    val pixelScreenPosition = worldToScreenPosition(Vector2(gameObject.transform.position.x + x, gameObject.transform.position.y + y))
+            //texel screen position from texel world position
+            val sx1 = (leftBottom.x - position.x) * zoom
+            val sy1 = (-leftBottom.y - position.y) * zoom
+            val sx2 = (rightTop.x - position.x) * zoom
+            val sy2 = (-rightTop.y - position.y) * zoom
 
-                    val originalPixPosition =
-                        getRelativePixelPosition(Vector2(x, y), renderable, gameObject.transform.scale, ratio)
+            val AA = Vector2(
+                floor(min(sx1, sx2)).toInt(),
+                floor(min(sy1, sy2)).toInt()
+            )
+
+            val BB = Vector2(
+                floor(max(sx1, sx2)).toInt(),
+                floor(max(sy1, sy2)).toInt()
+            )
+
+            // scan only the AABB pixels
+            for (sy in AA.y..<(BB.y)) {
+                for (sx in AA.x..<(BB.x)) {
+
+                    // screen to world
+                    val pixelWorldPosition = Vector2(
+                        position.x + (sx / zoom),
+                        -(position.y + (sy / zoom))
+                    )
+
+                    //world to texel
+                    val texelPosition = Vector2(
+                        floor((pixelWorldPosition.x - gameObject.transform.position.x) / gameObject.transform.scale.x * renderable.width).toInt(),
+                        floor(((gameObject.transform.position.y + gameObject.transform.scale.y) - pixelWorldPosition.y) / gameObject.transform.scale.y * renderable.height).toInt()
+                    )
+
+                    //filter out of bound
+                    if (texelPosition.x < 0 || texelPosition.y < 0 || texelPosition.x >= renderable.width || texelPosition.y >= renderable.height) continue
+
+                    val pixel = renderable.getPixelAt(texelPosition.x, texelPosition.y)
+
                     screen.setPixelAt(
-                        renderable.getPixelAt(originalPixPosition.x, originalPixPosition.y),
-                        pixelScreenPosition
+                        pixel,
+                        Vector2(sx, sy)
                     )
                 }
             }
         }
-    }
-
-    fun worldToScreenPosition(
-        worldPosition: Vector2<Double>
-    ): Vector2<Int> {
-        val pixelScreenPosition = Vector2(
-            round(((worldPosition.x) - transform.position.x) / ratio.x).toInt(),
-            round((-(worldPosition.y) - transform.position.y) / ratio.y).toInt()
-        )
-        return pixelScreenPosition
-    }
-
-    private fun getRelativePixelPosition(
-        pixelPosition: Vector2<Int>,
-        renderable: Renderable,
-        scaleFactor: Vector2<Double>,
-        ratio: Vector2<Double>
-    ): Vector2<Int> {
-        var scaled = Vector2(
-            floor(pixelPosition.x / abs(scaleFactor.x ) * ratio.x).toInt(),
-            floor(pixelPosition.y / abs(scaleFactor.y ) * ratio.y).toInt()
-        )
-
-        if (scaleFactor.x < 0) {
-            scaled = Vector2(
-                (renderable.width - scaled.x) - 1,
-                scaled.y
-            )
-        }
-
-        if (scaleFactor.y < 0) {
-            scaled = Vector2(
-                scaled.x,
-                (renderable.height - scaled.y) - 1
-            )
-        }
-
-        return scaled
     }
 }

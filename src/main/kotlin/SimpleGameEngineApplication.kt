@@ -39,11 +39,11 @@ fun main() {
     ) }
 
 
-//    for(i in 0..1000) {
-//        scene.addGameObject(Player(Random.nextDouble(10.0, 50.0), images[Random.nextInt(images.size)], mouseInputHandler))
-//    }
+    for(i in 0..100) {
+        scene.addGameObject(Player(Random.nextDouble(10.0, 50.0), images[Random.nextInt(images.size)]))
+    }
 
-    scene.addGameObject(CartesianPlane(camera))
+//    scene.addGameObject(CartesianPlane(camera))
 
     scene.addGameObject(CameraController(camera, mouseInputHandler))
 
